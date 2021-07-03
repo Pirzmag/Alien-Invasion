@@ -26,17 +26,41 @@ class AlienInvasion:
     def run_game(self):
         """Start the main game loop"""
         while True:
-            # watching for keyboard and mouse events
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
+            self.check_events()
+            self.ship.update()
+            self.update_screen()
 
-            # Redraw the screen each loop
-            self.screen.fill(self.settings.bg_color)
-            self.ship.blitme()
+    def check_events(self):
+        """Checking keyboard and mouse events"""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                self.check_keydown_events(event)
+            elif event.type == pygame.KEYUP:
+                self.check_keyup_events(event)
 
-            # Refresh the screen
-            pygame.display.flip()
+    def check_keydown_events(self, event):
+        """Check for keypresses"""
+        if event.key == pygame.K_RIGHT:
+            self.ship.moving_right = True
+        elif event.key == pygame.K_LEFT:
+            self.ship.moving_left = True
+        elif event.key == pygame.K_q:
+            sys.exit()
+
+    def check_keyup_events(self, event):
+        if event.key == pygame.K_RIGHT:
+            self.ship.moving_right = False
+        elif event.key == pygame.K_LEFT:
+            self.ship.moving_left = False
+
+    def update_screen(self):
+        """Redraw the screen each loop and update the elements on screen"""
+        self.screen.fill(self.settings.bg_color)
+        self.ship.blitme()
+
+        pygame.display.flip()
 
 
 if __name__ == '__main__':
